@@ -23,6 +23,17 @@ async function main() {
 
     console.log(sendBalance);
 
+    await web3.eth.sendSignedTransaction(sendBalance.rawTransaction)
+    .on('transactionHash', function(hash){ 
+        console.log('transactionHash: ' + hash) 
+    })
+    .on('receipt', function(receipt){ 
+        console.log(receipt) 
+    })
+    .on('confirmation', function(confNumber, receipt, latestBlockHash){
+        console.log('confirmation: ' + confNumber, receipt, latestBlockHash)
+    })
+
     console.log("   --- Подпись и отправка в сеть  ---   ");
     let transaction = await web3.eth.accounts.signTransaction({
         to: adrRecipient,
