@@ -14,7 +14,7 @@ async function main() {
     let account2 = web3.eth.accounts.privateKeyToAccount(key)
     console.log(account2);
 
-    console.log("   --- Пополнение баланса ---   ");
+    console.log("\n\n\n   --- Пополнение баланса ---   \n");
     let sendBalance = await web3.eth.accounts.signTransaction({
         to: accountSender.address,
         value: 1_000_000_000_000_000,
@@ -34,7 +34,7 @@ async function main() {
         console.log('confirmation: ' + confNumber, receipt, latestBlockHash)
     })
 
-    console.log("   --- Подпись и отправка в сеть  ---   ");
+    console.log("\n\n\n   --- Подпись и отправка в сеть  ---   \n");
     let transaction = await web3.eth.accounts.signTransaction({
         to: adrRecipient,
         value: value,

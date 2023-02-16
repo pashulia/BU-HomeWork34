@@ -7,7 +7,7 @@ const readlineSync = require('readline-sync')
 async function main() {
     console.log("   --- Создание аккаунта ---   ");
 
-    let accountSender = await web3.eth.personal.importRawKey(entropy, password)
+    let accountSender = await web3.eth.personal.newAccount(password)
     console.log(accountSender);
 
     let key = "0x72b5212bab8a9b9974244f2d7a5d825ec8c411085f0beea5b6623beb51dca88a"
@@ -17,7 +17,7 @@ async function main() {
     console.log("\n\n\n   --- Пополнение баланса ---   \n");
     let sendBalance = await web3.eth.accounts.signTransaction({
         to: accountSender,
-        value: 1_000_000_000_000_000,
+        value: 1_000_000_000_000_000_000,
         gas: 60_000,
     }, account2.privateKey)
 
@@ -37,7 +37,7 @@ async function main() {
     await web3.eth.getBalance(accountSender)
     .then(console.log)
 
-    console.log("\n\n\n   --- Подпись и отправка в сеть  ---   \n");
+    console.log("\n\n\n   ---  Отправка транзакции без локальной подписи  ---   \n");
 
     web3.eth.defaultAccount = accountSender
 
@@ -50,9 +50,10 @@ async function main() {
     // Отправка транзакции с аккаунта по умолчанию
     // Если аккаунт по умолчанию не будет разблокирован, произойдет ошибка
     await web3.eth.sendTransaction({
+        from: accountSender,
         to: adrRecipient,
         value: value,
-        gas: 50_000
+        gas: 21_000
     }, function(error, result) {
         if (error) {
             console.log(error);
@@ -66,9 +67,23 @@ async function main() {
 
     await web3.eth.getBalance(accountSender)
     .then(console.log)
+
+    console.log("\n\n\n   ---  Отправка транзакции без разблокировки  ---   \n");
+
+    // Отправка транзакции с определённого аккаунта
+    // Необходимо указать пароль от personalAddress Функция возвращает только хеш транзакции
+    await web3.eth.personal.sendTransaction({
+        from: accountSender,
+        to: adrRecipient,
+        value: value,
+        gas: 21_0000
+    }, password)
+    .then(console.log)
+
+    await web3.eth.getBalance(accountSender)
+    .then(console.log)
 }
 
-let entropy = readlineSync.question('Укажите 32-битную строку : ');
 let password = readlineSync.question('Укажите пароль: ');
 let adrRecipient = readlineSync.question('Укажите адрес получателя: ');
 let value = readlineSync.question('Укажите сумму: ');
@@ -80,5 +95,4 @@ main()
     process.exit(1);
 })
 
-//0xc2ee825ffd44cb0550df01ab89ea96253bf417c84d7232d4641f96bbcf58c4fe
 //0x11Ddd844F0727D9b0c22d47c143Aa351E78418b4
