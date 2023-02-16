@@ -50,6 +50,12 @@ let privateKey = readlineSync.question('Укажите закрытый ключ
 let adrRecipient = readlineSync.question('Укажите адрес получателя: ');
 let value = readlineSync.question('Укажите сумму: ');
 main()
+.then(() => process.exit(0))
+
+.catch((error) => {
+    console.error(error);
+    process.exit(1);
+})
 
 //0xc2ee825ffd44cb0550df01ab89ea96253bf417c84d7232d4641f96bbcf58c4fe
 //0x0202023Fcb9584bD0eBB44fd4FFA788a2f830273
